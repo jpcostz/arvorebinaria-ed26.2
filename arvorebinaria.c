@@ -122,6 +122,12 @@ int main() {
 
         switch(menu) {
             case 1:
+                //liberar a memoria alocada para a arvore anterior, se existir
+                if(a != NULL) {
+                    freetree(a);
+                    a = NULL;
+                }
+
                 //obter o nome do arquivo
                 getchar();
                 printf("\nDigite o nome do arquivo .txt: ");
@@ -137,7 +143,7 @@ int main() {
                 arq = fopen(name, "r");
                 if (arq == NULL) {
                     printf("Erro ao abrir o arquivo.\n");
-                    exit(1);
+                    break;
                 }
                 a = readfile(arq);
                 fclose(arq);

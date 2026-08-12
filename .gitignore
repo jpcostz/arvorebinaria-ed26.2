@@ -1,0 +1,33 @@
+# Compiled binaries and executables
+*.exe
+*.out
+*.app
+*.elf
+
+# Object and library files
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.dll
+
+# Build and output directories
+build/
+bin/
+obj/
+Debug/
+Release/
+
+# IDE and Editor configurations
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+.idea/
+*.swp
+*.swo
+
+# System-generated files
+[Dd]esktop.ini
+Thumbs.db
+.DS_Store

@@ -54,8 +54,9 @@ O arquivo de texto deve conter a representação aninhada/parentagada da árvore
 
 **Representação visual da árvore acima:**
 ```text
-    1
-   /   2   3
+     1
+    / \
+   2   3
 ```
 
 ---

@@ -98,6 +98,46 @@ void arqname (char *a){
     }
 }
 
+//funcao para o calculo da altura da arvore
+int altura (tree *a) {
+    if (a == NULL) {
+        return 0;
+    }else{
+        int esq = altura(a->esq);
+        int dir = altura(a->dir);
+        if (esq > dir) {
+            return esq + 1;
+        } else {
+            return dir + 1;
+        }
+    }
+}
+
+//funcao para imprimir um nivel
+void printlevel (tree *a, int level, int cont) {
+    if (a != NULL) {
+        if (cont == level) {
+            printf("%d ", a->info);
+        } else {
+            printlevel(a->esq, level, cont + 1);
+            printlevel(a->dir, level, cont + 1);
+        }
+    }
+}
+
+//funcao para contar nos em um nivel
+int contlevel (tree *a, int level, int cont) {
+    if (a == NULL) {
+        return 0;
+    } else {
+        if (cont == level) {
+            return 1;
+        } else {
+            return contlevel(a->esq, level, cont + 1) + contlevel(a->dir, level, cont + 1);
+        }
+    }
+}
+
 int main() {
     tree *a = NULL;
     FILE *arq;

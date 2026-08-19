@@ -72,6 +72,28 @@ void freeQueue(Queue *q) {
 }
 //--fim da estrutura e operações da fila
 
+//funcao para imprimir a arvore em largura usando a fila
+void print_largura(tree *a) {
+    if (a == NULL) return;
+
+    Queue *q = createQueue();
+    enqueue(q, a);
+
+    while (!isEmpty(q)) {
+        tree *curr = dequeue(q);
+        printf("%d ", curr->info);
+
+        if (curr->esq != NULL) {
+            enqueue(q, curr->esq);
+        }
+        if (curr->dir != NULL) {
+            enqueue(q, curr->dir);
+        }
+    }
+
+    freeQueue(q);
+}
+
 //funcao para imprimir a arvore em pre-ordem, em-ordem e pos-ordem
 void print (tree *a, int type) {
     if (a != NULL) {
@@ -86,13 +108,6 @@ void print (tree *a, int type) {
         if (type == 3) {
             printf("%d ", a->info);
         }
-    }
-}
-
-void print_largura(tree *a) {
-    int h = altura(a);
-    for (int i = 0; i < h; i++) {
-        printlevel(a, i, 0);
     }
 }
 

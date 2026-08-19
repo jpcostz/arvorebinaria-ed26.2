@@ -12,6 +12,66 @@ typedef struct tree {
     struct tree *dir;
 } tree;
 
+//--estrutura e operações da fila para a impressao em largura
+typedef struct QueueNode {
+    tree *node;
+    struct QueueNode *next;
+} QueueNode;
+
+typedef struct Queue {
+    QueueNode *front;
+    QueueNode *rear;
+} Queue;
+
+Queue* createQueue() {
+    Queue *q = (Queue*) malloc(sizeof(Queue));
+    q->front = q->rear = NULL;
+    return q;
+}
+
+int isEmpty(Queue *q) {
+    return q->front == NULL;
+}
+
+void enqueue(Queue *q, tree *node) {
+    if (node == NULL) return;
+
+    QueueNode *newNode = (QueueNode*) malloc(sizeof(QueueNode));
+    newNode->node = node;
+    newNode->next = NULL;
+
+    if (q->rear == NULL) {
+        q->front = q->rear = newNode;
+        return;
+    }
+
+    q->rear->next = newNode;
+    q->rear = newNode;
+}
+
+tree* dequeue(Queue *q) {
+    if (isEmpty(q)) return NULL;
+
+    QueueNode *temp = q->front;
+    tree *node = temp->node;
+
+    q->front = q->front->next;
+    if (q->front == NULL) {
+        q->rear = NULL;
+    }
+
+    free(temp);
+    return node;
+}
+
+void freeQueue(Queue *q) {
+    while (!isEmpty(q)) {
+        dequeue(q);
+    }
+    free(q);
+}
+//--fim da estrutura e operações da fila
+
 //funcao para imprimir a arvore em pre-ordem, em-ordem e pos-ordem
 void print (tree *a, int type) {
     if (a != NULL) {
@@ -26,6 +86,13 @@ void print (tree *a, int type) {
         if (type == 3) {
             printf("%d ", a->info);
         }
+    }
+}
+
+void print_largura(tree *a) {
+    int h = altura(a);
+    for (int i = 0; i < h; i++) {
+        printlevel(a, i, 0);
     }
 }
 
@@ -195,15 +262,19 @@ int main() {
                     printf("1. Pre-ordem\n");
                     printf("2. Em-ordem\n");
                     printf("3. Pos-ordem\n");
+                    printf("4. Largura\n");
                     printf("\nOpcao: ");
                     scanf("%d", &x);
-                    if (x >= 1 && x <= 3) {
+                    if (x >= 1 && x <= 4) {
                         switch (x) {
                             case 1: printf("\n Pre-ordem: "); break;
                             case 2: printf("\n Em-ordem: "); break;
                             case 3: printf("\n Pos-ordem: "); break;
+                            case 4: printf("\n Largura: "); break;
                         }
-                        print(a, x);
+                        if (x >= 1 && x <= 3) print(a, x);
+                        else print_largura(a);
+
                         printf("\n");
                         break;
                     }

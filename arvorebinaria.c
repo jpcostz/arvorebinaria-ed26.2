@@ -220,6 +220,63 @@ int contlevel (tree *a, int level, int cont) {
     }
 }
 
+//Função auxiliar para verificar se a árvore está ordenada
+int isOrderedHelper(tree *a, tree **prev) {
+    if (a == NULL) {
+        return 1;
+    }
+
+    // 1. Verifica a subárvore esquerda
+    if (!isOrderedHelper(a->esq, prev)) {
+        return 0;
+    }
+
+    // 2. O valor atual deve ser estritamente maior que o nó anterior visitado
+    if (*prev != NULL && a->info <= (*prev)->info) {
+        return 0;
+    }
+    *prev = a;
+
+    // 3. Verifica a subárvore direita
+    return isOrderedHelper(a->dir, prev);
+}
+
+// Função chamada pela main para verificar se a árvore está ordenada
+int isOrdered(tree *a) {
+    tree *prev = NULL;
+    return isOrderedHelper(a, &prev);
+}
+
+//funcao para verificar se a arvore e completa
+int isComplete(tree *a, int index, int totalNodes) {
+    if (a == NULL) return 1;
+
+    // Se o índice calculado for maior ou igual ao total de nós, a árvore tem "buracos"
+    if (index >= totalNodes) return 0;
+
+    return isComplete(a->esq, 2 * index + 1, totalNodes) &&
+           isComplete(a->dir, 2 * index + 2, totalNodes);
+}
+
+int getLevel(tree *a, int x, int level) {
+    if (a == NULL) {
+        return -1;
+    }
+
+    if (a->info == x) {
+        return level;
+    }
+
+    // Busca primeiro na subárvore esquerda
+    int downlevel = getLevel(a->esq, x, level + 1);
+    if (downlevel != -1) {
+        return downlevel;
+    }
+
+    // Se não encontrou na esquerda, busca na subárvore direita
+    return getLevel(a->dir, x, level + 1);
+}
+
 int main() {
     tree *a = NULL;
     FILE *arq;
@@ -230,14 +287,17 @@ int main() {
     printf("=========================================\n");
 
     //menu de opcoes
-    while(menu != 6) {
+    while(menu != 9) {
         printf("\nEscolha uma opcao:\n");
         printf("1. Ler uma arvore\n");
         printf("2. Imprimir a arvore\n");
         printf("3. Verificar se um elemento existe na arvore\n");
         printf("4. Contar o numero de elementos da arvore\n");
         printf("5. Imprimir nos folha da arvore\n");
-        printf("6. Sair\n");
+        printf("6. Verificar se a arvore esta ordenada\n");
+        printf("7. Verificar se a arvore e completa\n");
+        printf("8. Imprimir o nivel a qual o no x pertence\n");
+        printf("9. Sair\n");
         printf("\nOpcao: ");
 
         scanf("%d", &menu);
@@ -316,6 +376,32 @@ int main() {
                 folhas = 0;
                 break;
             case 6:
+                printf("\n");
+                if (isOrdered(a)) printf("A arvore esta ordenada.\n");
+                else printf("A arvore nao esta ordenada.\n");
+                break;
+            case 7:
+                printf("\n");
+                if (a == NULL) {
+                    printf("\nA arvore esta vazia (completa).\n");
+                } else if (isComplete(a, 0, count(a))) {
+                    printf("\nA arvore e completa.\n");
+                } else {
+                    printf("\nA arvore nao e completa.\n");
+                }
+                break;
+            case 8: {
+                printf("\nDigite o elemento para saber o nivel: ");
+                scanf("%d", &x);
+                int lvl = getLevel(a, x, 0);
+                if (lvl != -1) {
+                    printf("\nO elemento %d pertence ao nivel: %d\n", x, lvl);
+                } else {
+                    printf("\nO elemento %d nao foi encontrado na arvore.\n", x);
+                }
+                break;
+            }
+            case 9:
                 printf("Saindo...\n");
                 freetree(a);
                 break;

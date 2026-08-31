@@ -296,9 +296,50 @@ void abb_printfolha(tree *a, int value){
 
 }
 
-void abb_insert(tree *a, int value){}
+tree *abb_insert(tree *a, int value){
+    if (a == NULL) {
+        a = (tree*)malloc(sizeof(tree));
+        a->info = value;
+        a->esq = NULL;
+        a->dir = NULL;
+    } else if (value <= a->info) {
+        a->esq = abb_insert(a->esq, value);
+    } else {
+        a->dir = abb_insert(a->dir, value);
+    }
 
-void abb_remove(tree *a, int value){}
+    return a;
+}
+
+void abb_remove(tree **a, int value){
+    if (*a != NULL){
+        if((*a)->info == value){
+            if((*a)->esq == NULL && (*a)->dir == NULL){
+                free(*a);
+                *a = NULL;
+            } else if ((*a)->esq == NULL){
+                tree *aux = (*a)->dir;
+                free(*a);
+                *a = aux;
+            } else if ((*a)->dir == NULL){
+                tree *aux = (*a)->esq;
+                free(*a);
+                *a = aux;
+            } else {
+                tree *aux = (*a)->esq;
+                while (aux->dir != NULL){
+                    aux = aux->dir;
+                }
+                (*a)->info = aux->info;
+                abb_remove(&((*a)->esq), aux->info);
+            }
+        } else if(value <(*a)->info) {
+            abb_remove(&((*a)->esq), value);
+        } else {
+            abb_remove(&((*a)->dir), value);
+        }
+    }
+}
 
 
 //--fim das funcoes para abb
@@ -416,14 +457,21 @@ int main() {
                 printf("\nValor a ser inserido: ");
                 scanf("%d", &x);
 
-                abb_insert(a, x);
+                a = abb_insert(a, x);
+
+                printf("Elemento %d inserido com sucesso!\n\n", x);
 
                 break;
             case 7:
                 printf("\nValor a ser removido: ");
                 scanf("%d", &x);
 
-                abb_remove(a, x);
+                if(exist(a, x) == 1){
+                    abb_remove(a, x);
+                    printf("Elemento %d removido com sucesso!\n\n", x);
+                } else {
+                    printf("Este elemento não esta na árvore.\n\n");
+                }
 
                 break;
             case 8:
